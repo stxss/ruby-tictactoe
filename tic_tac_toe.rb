@@ -1,6 +1,12 @@
+# frozen_string_literal: true
+
+# Creating the Game Class, which stores the player's names, selected character and score
 class Game
+  # Names and selected characters only need to be read, while the game/score may need to be changed
   attr_reader :player1_name, :player2_name, :player1_char, :player2_char
   attr_accessor :game
+
+  # Upon initialization, asking for the players names and playing characters
   def initialize
     @player1_name = ask_name('first')
     @player1_char = ask_char('first')
@@ -10,58 +16,58 @@ class Game
     @player2_char = ask_char('second')
     @player2 = Player.new(player2_name, player2_char, 0)
 
-    @game = Board.new()
+    # After having the necesseary information for both players, starting a new board
+    @game = Board.new
   end
 
+  # Method for asking the name
   def ask_name(order)
-    if order == 'first'
-      puts 'Please, enter the name of the first player: '
-    elsif order == 'second'
-      puts 'Please, enter the name of the second player: '
+    case order
+    when 'first'
+      puts "Please, enter the name of the first player: \n\n"
+    when 'second'
+      puts "\nPlease, enter the name of the second player: \n\n"
     end
     gets.chomp
   end
 
+  # Method for asking the playing character
   def ask_char(order)
-    if order == 'first'
-      puts "#{@player1_name}, please enter a character you want to play with, from 'a-z'"
-    elsif order == 'second'
-      puts "#{@player2_name}, please enter a character you want to play with, from 'a-z'"
+    case order
+    when 'first'
+      puts "\n#{@player1_name}, please enter a character you want to play with, from 'a-z'\n\n"
+    when 'second'
+      puts "\n#{@player2_name}, please enter a character you want to play with, from 'a-z'\n\n"
     end
     gets.chomp
   end
 end
 
+# Creating the class to store the players info
 class Player
   def initialize(name, character, score)
     @name = name
     @character = character
     @score = score
-    puts @name, @character, @score
   end
 end
 
+# Creating the class for the Tic-Tac-Toe board
 class Board
-    def initialize()
-        @is_winner = false
+  def initialize
+    # Setting a flag to know if a winner was found
+    @is_winner = false
 
-        board = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        
-        puts " #{board[0]} | #{board[1]} | #{board[2]} "
-        puts "---+---+---"
-        puts " #{board[3]} | #{board[4]} | #{board[5]} "
-        puts "---+---+---"
-        puts " #{board[6]} | #{board[7]} | #{board[8]} "
-    end
-
-    def plays
-        "you're playing!"
-    end
+    board = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    puts "\n"
+    puts " #{board[0]} | #{board[1]} | #{board[2]} "
+    puts '---+---+---'
+    puts " #{board[3]} | #{board[4]} | #{board[5]} "
+    puts '---+---+---'
+    puts " #{board[6]} | #{board[7]} | #{board[8]} "
+  end
 end
 
 start = Game.new
 p start.game.plays
 # puts start
-
-
-
