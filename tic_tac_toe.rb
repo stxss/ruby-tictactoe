@@ -74,22 +74,17 @@ class Board
   end
 
   def round(player1_char, player2_char, turn)
-    play = if turn.odd?
-             'first'
-           else
-             'second'
-           end
+    play = turn.odd? ? 'first' : 'second'
 
     placing = player_play.to_i - 1
     row = placing / 3
     column = placing % 3
 
-    case play
-    when 'first'
-      board[row][column] = player1_char
-    when 'second'
-      board[row][column] = player2_char
-    end
+    board[row][column] = if play == 'first'
+                           player1_char
+                         else
+                           player2_char
+                         end
     print_board
   end
 
