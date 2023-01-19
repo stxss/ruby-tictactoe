@@ -10,7 +10,12 @@ class Game
     @player1_char = ask_char('first')
     @player1 = Player.new(player1_name, player1_char, 0)
 
-    @player2_name = ask_name('second')
+    # @player2_name = ask_name('second')
+    loop do
+      @player2_name = ask_name('second')
+      break unless player2_name == player1_name
+    end
+
     @player2_char = ask_char('second')
     @player2 = Player.new(player2_name, player2_char, 0)
 
@@ -150,3 +155,10 @@ end
 Game.new
 # start = Game.new
 # p start.game.round
+
+# TODO: players' names have to be different
+# TODO: players' characters have to be different and only 1 char in length
+# TODO: players' can't put their marker on top of somebody elses (no overwriting)
+# TODO: when someone wins, updating the score
+# TODO: after a finished round, ask if they want to continue with the game
+# TODO:
