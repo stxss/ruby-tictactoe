@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Creating the Game Class, which stores the player's names, selected character and score
 class Game
   # Names and selected characters only need to be read, while the game/score may need to be changed
@@ -54,7 +52,7 @@ end
 
 # Creating the class for the Tic-Tac-Toe board
 class Board
-  attr_accessor :board, :is_winner, :turn
+  attr_accessor :board, :is_winner, :turn, :marker
 
   def initialize(player1_char, player2_char)
     # Setting a flag to know if a winner was found
@@ -85,14 +83,17 @@ class Board
     column = placing % 3
 
     # Placing the players' character into their desired position
-    board[row][column] = if play == 'first'
-                           player1_char
-                         else
-                           player2_char
-                         end
+    @marker = if play == 'first'
+                player1_char
+              else
+                player2_char
+              end
+
+    board[row][column] = marker
 
     # Printing out the board
     print_board
+    win_check
   end
 
   # Function to get the player's play
@@ -105,10 +106,31 @@ class Board
   def print_board
     system('clear')
     puts "     #{board[0][0]} | #{board[0][1]} | #{board[0][2]}\n"
-    puts '     ---+---+---'
+    puts '    ---+---+---'
     puts "     #{board[1][0]} | #{board[1][1]} | #{board[1][2]} \n"
-    puts '     ---+---+---'
+    puts '    ---+---+---'
     puts "     #{board[2][0]} | #{board[2][1]} | #{board[2][2]} \n"
+  end
+
+  def win_check
+    p row_win?
+    # @col_win = col_win
+    # @diag_win = diag_win
+  end
+
+  def row_win?
+    (0..2).any? do |row|
+      p board[(row..).step(3)]
+      board[row].all?(@marker)
+    end
+  end
+
+  def col_win
+    # code
+  end
+
+  def diag_win
+    # code
   end
 end
 
