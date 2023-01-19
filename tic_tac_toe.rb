@@ -74,34 +74,45 @@ class Board
   end
 
   def round(player1_char, player2_char, turn)
+    # Cheching whose turn is it to play
     play = turn.odd? ? 'first' : 'second'
 
+    # Asking the player for the play position from the available squares
     placing = player_play.to_i - 1
+
+    # Interpreting the answer to the row and column values
     row = placing / 3
     column = placing % 3
 
+    # Placing the players' character into their desired position
     board[row][column] = if play == 'first'
                            player1_char
                          else
                            player2_char
                          end
+
+    # Printing out the board
     print_board
   end
 
+  # Function to get the player's play
   def player_play
     puts "Please, select the position you want to play in: \n"
     gets.chomp
   end
 
+  # Function to print out the board, updating it as well on each round
   def print_board
-    puts "#{board[0][0]} | #{board[0][1]} | #{board[0][2]}\n"
-    puts '---+---+---'
-    puts "#{board[1][0]} | #{board[1][1]} | #{board[1][2]} \n"
-    puts '---+---+---'
-    puts "#{board[2][0]} | #{board[2][1]} | #{board[2][2]} \n"
+    system('clear')
+    puts "     #{board[0][0]} | #{board[0][1]} | #{board[0][2]}\n"
+    puts '     ---+---+---'
+    puts "     #{board[1][0]} | #{board[1][1]} | #{board[1][2]} \n"
+    puts '     ---+---+---'
+    puts "     #{board[2][0]} | #{board[2][1]} | #{board[2][2]} \n"
   end
 end
 
+# Starting the game
 start = Game.new
 p start.game.round
 # puts start
