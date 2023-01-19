@@ -52,7 +52,8 @@ end
 
 # Creating the class for the Tic-Tac-Toe board
 class Board
-  attr_accessor :board, :is_winner, :turn, :marker
+  attr_accessor :board, :is_winner, :turn
+  attr_reader :marker
 
   def initialize(player1_char, player2_char)
     # Setting a flag to know if a winner was found
@@ -96,7 +97,6 @@ class Board
     puts "There's a winner!" if win_check
   end
 
-
   # Function to get the player's play
   def player_play
     puts "Please, select the position you want to play in: \n"
@@ -121,23 +121,32 @@ class Board
 
   def row_win?
     (0..2).any? do |row|
-      # p board[(row..).step(3)]
-      board[row].all?(@marker)
+      board[row].all?(marker)
     end
   end
 
   def col_win?
     (0..2).any? do |col|
-      board.transpose[col].all?(@marker)
+      board.transpose[col].all?(marker)
     end
   end
 
-  def diag_win
-    # code
+  def diag_win?
+    # Top left to bottom right diagonal
+    tlbr_diag = []
+    bltr_diag = []
+
+    # Inserting the first and second diagonals into arrays
+    3.times do |i|
+      tlbr_diag.push(board[i][i])
+      bltr_diag.push(board.reverse[i][i])
+    end
+
+    tlbr_diag.all?(marker) || bltr_diag.all?(marker)
   end
 end
 
 # Starting the game
-start = Game.new
-p start.game.round
-# puts start
+Game.new
+# start = Game.new
+# p start.game.round
