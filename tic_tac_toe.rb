@@ -116,7 +116,7 @@ class Board
   def win_check
     row_win?
     col_win?
-    # @diag_win = diag_win
+    diag_win?
   end
 
   def row_win?
@@ -127,9 +127,8 @@ class Board
   end
 
   def col_win?
-    (0..2).any? do
-      col = board.map { |row| row[0] }
-      col.all?(@marker)
+    (0..2).any? do |col|
+      board.transpose[col].all?(@marker)
     end
   end
 
