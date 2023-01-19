@@ -1,7 +1,7 @@
 # Creating the Game Class, which stores the player's names, selected character and score
 class Game
   # Names and selected characters only need to be read, while the game/score may need to be changed
-  attr_reader :player1_name, :player2_name, :player1_char, :player2_char
+  attr_reader :player1_name, :player2_name, :player1_char, :player2_char, :player1_score, :player2_score
   attr_accessor :game
 
   # Upon initialization, asking for the players names and playing characters
@@ -13,8 +13,6 @@ class Game
       break if player1_char.length == 1 && player1_char.match(/[a-zA-Z]/)
     end
 
-    @player1 = Player.new(player1_name, player1_char, 0)
-
     loop do
       @player2_name = ask_name('second')
       break unless player2_name == player1_name
@@ -25,10 +23,16 @@ class Game
       break if player2_char != player1_char && player2_char.match(/[a-zA-Z]/) && player2_char.length == 1
     end
 
-    @player2 = Player.new(player2_name, player2_char, 0)
+    @player1_score = 0
+    @player2_score = 0
+
+    # Create both players 'profiles'
+    @player1 = Player.new(player1_name, player1_char, player1_score)
+    @player2 = Player.new(player2_name, player2_char, player2_score)
 
     # After having the necesseary information for both players, starting a new board
-    @game = Board.new(player1_char, player2_char)
+    # @game = Board.new(player1_char, player2_char)
+    @game = Board.new(@player1, @player2)
   end
 
   # Method for asking the name
@@ -57,6 +61,9 @@ end
 
 # Creating the class to store the players info
 class Player
+  attr_reader :name, :character
+  attr_accessor :score
+
   def initialize(name, character, score)
     @name = name
     @character = character
@@ -69,20 +76,20 @@ class Board
   attr_accessor :board, :is_winner, :turn
   attr_reader :marker
 
-  def initialize(player1_char, player2_char)
+  def initialize(player1, player2)
     # Setting a flag to know if a winner was found
-    is_winner = false
+    @is_winner = false
 
     # Creating the array for the rows and columns of the board
     @board = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
 
     # Playing a round, passing the players' characters and whose turn is it to play
     @turn = 1
-    until is_winner
-      round(player1_char, player2_char, turn)
+    until @is_winner
+      round(player1.character, player2.character, turn)
       @turn += 1
 
-      is_winner = true if turn == 10
+      @is_winner = true if turn == 10
     end
   end
 
@@ -108,7 +115,7 @@ class Board
 
     # Printing out the board
     print_board
-    puts "There's a winner!" if win_check
+    win_check
   end
 
   # Function to get the player's play
@@ -128,9 +135,10 @@ class Board
   end
 
   def win_check
-    row_win?
-    col_win?
-    diag_win?
+    return unless row_win? || col_win? || diag_win?
+
+    puts "There's a winner! The winner is #{}"
+    @is_winner = true
   end
 
   def row_win?
@@ -165,8 +173,6 @@ Game.new
 # start = Game.new
 # p start.game.round
 
-# TODO: players' names have to be different
-# TODO: players' characters have to be different and only 1 char in length
 # TODO: players' can't put their marker on top of somebody elses (no overwriting)
 # TODO: when someone wins, updating the score
 # TODO: after a finished round, ask if they want to continue with the game
