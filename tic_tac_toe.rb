@@ -93,8 +93,9 @@ class Board
 
     # Printing out the board
     print_board
-    win_check
+    puts "There's a winner!" if win_check
   end
+
 
   # Function to get the player's play
   def player_play
@@ -113,20 +114,23 @@ class Board
   end
 
   def win_check
-    p row_win?
-    # @col_win = col_win
+    row_win?
+    col_win?
     # @diag_win = diag_win
   end
 
   def row_win?
     (0..2).any? do |row|
-      p board[(row..).step(3)]
+      # p board[(row..).step(3)]
       board[row].all?(@marker)
     end
   end
 
-  def col_win
-    # code
+  def col_win?
+    (0..2).any? do
+      col = board.map { |row| row[0] }
+      col.all?(@marker)
+    end
   end
 
   def diag_win
