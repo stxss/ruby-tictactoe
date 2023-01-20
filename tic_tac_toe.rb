@@ -74,11 +74,14 @@ end
 # Creating the class for the Tic-Tac-Toe board
 class Board
   attr_accessor :board, :is_winner, :turn
-  attr_reader :marker
+  attr_reader :marker, :player1, :player2
 
   def initialize(player1, player2)
     # Setting a flag to know if a winner was found
     @is_winner = false
+
+    @player1 = player1
+    @player2 = player2
 
     # Creating the array for the rows and columns of the board
     @board = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
@@ -93,7 +96,7 @@ class Board
     end
   end
 
-  def round(player1_char, player2_char, turn)
+  def round(player1, player2, turn)
     # Cheching whose turn is it to play
     play = turn.odd? ? 'first' : 'second'
 
@@ -106,16 +109,16 @@ class Board
 
     # Placing the players' character into their desired position
     @marker = if play == 'first'
-                player1_char
+                @player1.character
               else
-                player2_char
+                @player2.character
               end
 
     board[row][column] = marker
 
     # Printing out the board
     print_board
-    win_check
+    win_check(@player1, @player2)
   end
 
   # Function to get the player's play
@@ -134,10 +137,16 @@ class Board
     puts "     #{board[2][0]} | #{board[2][1]} | #{board[2][2]} \n"
   end
 
-  def win_check
+  def win_check(player1, player2)
     return unless row_win? || col_win? || diag_win?
 
-    puts "There's a winner! The winner is #{}"
+    winner = if marker == player1.character
+               player1.name
+             else
+               player2.name
+             end
+
+    puts "There's a winner! The winner is #{winner}"
     @is_winner = true
   end
 
@@ -177,3 +186,4 @@ Game.new
 # TODO: when someone wins, updating the score
 # TODO: after a finished round, ask if they want to continue with the game
 # TODO:
+# Idea: create a hash to store the player's name and their character, as a key value pair, for easier checking of who won
