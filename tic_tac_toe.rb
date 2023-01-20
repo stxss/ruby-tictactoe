@@ -5,34 +5,39 @@ class Game
   attr_accessor :game
 
   # Upon initialization, asking for the players names and playing characters
-  def initialize
-    @player1_name = ask_name('first')
+  def initialize(p1, p2)
+    if p1 == 'new' || p2 == 'new'
 
-    loop do
-      @player1_char = ask_char('first')
-      break if player1_char.length == 1 && player1_char.match(/[a-zA-Z]/)
+      @player1_name = ask_name('first')
+
+      loop do
+        @player1_char = ask_char('first')
+        break if player1_char.length == 1 && player1_char.match(/[a-zA-Z]/)
+      end
+
+      loop do
+        @player2_name = ask_name('second')
+        break unless player2_name == player1_name
+      end
+
+      loop do
+        @player2_char = ask_char('second')
+        break if player2_char != player1_char && player2_char.match(/[a-zA-Z]/) && player2_char.length == 1
+      end
+
+      @player1_score = 0
+      @player2_score = 0
+
+      # Create both players 'profiles'
+      @player1 = Player.new(player1_name, player1_char, player1_score)
+      @player2 = Player.new(player2_name, player2_char, player2_score)
+
+      # After having the necesseary information for both players, starting a new board
+      # @game = Board.new(player1_char, player2_char)
+      @game = Board.new(@player1, @player2)
+    else
+      @game = Board.new(p1, p2)
     end
-
-    loop do
-      @player2_name = ask_name('second')
-      break unless player2_name == player1_name
-    end
-
-    loop do
-      @player2_char = ask_char('second')
-      break if player2_char != player1_char && player2_char.match(/[a-zA-Z]/) && player2_char.length == 1
-    end
-
-    @player1_score = 0
-    @player2_score = 0
-
-    # Create both players 'profiles'
-    @player1 = Player.new(player1_name, player1_char, player1_score)
-    @player2 = Player.new(player2_name, player2_char, player2_score)
-
-    # After having the necesseary information for both players, starting a new board
-    # @game = Board.new(player1_char, player2_char)
-    @game = Board.new(@player1, @player2)
   end
 
   # Method for asking the name
@@ -89,14 +94,14 @@ class Board
     # Playing a round, passing the players' characters and whose turn is it to play
     @turn = 1
     until @is_winner
-      round(player1.character, player2.character, turn)
+      round(turn)
       @turn += 1
 
       @is_winner = true if turn == 10
     end
   end
 
-  def round(player1, player2, turn)
+  def round(turn)
     # Cheching whose turn is it to play
     play = turn.odd? ? 'first' : 'second'
 
@@ -118,7 +123,16 @@ class Board
 
     # Printing out the board
     print_board
-    win_check(@player1, @player2)
+
+    return unless win_check(@player1, @player2)
+
+    puts 'Do you want to play again? Please enter a valid option. [Y/N]'
+    answer = gets.chomp
+    if answer == 'Y' || answer == 'y' || answer == 'yes'.downcase
+      Game.new(@player1, @player2)
+    elsif answer == 'N' || answer == 'n' || answer == 'no'.downcase
+      exit
+    end
   end
 
   # Function to get the player's play
@@ -141,12 +155,13 @@ class Board
     return unless row_win? || col_win? || diag_win?
 
     winner = if marker == player1.character
-               player1.name
+               player1
              else
-               player2.name
+               player2
              end
 
-    puts "There's a winner! The winner is #{winner}"
+    winner.score += 1
+    puts "There's a winner! The winner is #{winner.name} and their score is #{winner.score}"
     @is_winner = true
   end
 
@@ -178,12 +193,10 @@ class Board
 end
 
 # Starting the game
-Game.new
+Game.new('new', 'new')
 # start = Game.new
 # p start.game.round
 
 # TODO: players' can't put their marker on top of somebody elses (no overwriting)
-# TODO: when someone wins, updating the score
-# TODO: after a finished round, ask if they want to continue with the game
 # TODO:
 # Idea: create a hash to store the player's name and their character, as a key value pair, for easier checking of who won
