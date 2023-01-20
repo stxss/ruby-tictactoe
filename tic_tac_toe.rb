@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Creating the Game Class, which stores the player's names, selected character and score
 class Game
   # Names and selected characters only need to be read, while the game/score may need to be changed
@@ -78,7 +80,7 @@ end
 
 # Creating the class for the Tic-Tac-Toe board
 class Board
-  attr_accessor :board, :is_winner, :turn
+  attr_accessor :board, :is_winner, :turn, :placing
   attr_reader :marker, :player1, :player2
 
   def initialize(player1, player2)
@@ -95,9 +97,11 @@ class Board
     @turn = 1
     until @is_winner
       round(turn)
-      @turn += 1
 
-      @is_winner = true if turn == 10
+      if turn == 10 && @is_winner == false
+        puts "Okay, no more places are available and there is no winner, so it's a tie!\n"
+        restart
+      end
     end
   end
 
@@ -106,11 +110,15 @@ class Board
     play = turn.odd? ? 'first' : 'second'
 
     # Asking the player for the play position from the available squares
-    placing = player_play.to_i - 1
+    loop do
+      puts "\nPlease, select the position you want to play in (1-9): \n"
+      @placing = gets.chomp.to_i - 1
+      break if @placing.between?(0, 9)
+    end
 
     # Interpreting the answer to the row and column values
-    row = placing / 3
-    column = placing % 3
+    @row = placing / 3
+    @column = placing % 3
 
     # Placing the players' character into their desired position
     @marker = if play == 'first'
@@ -119,36 +127,40 @@ class Board
                 @player2.character
               end
 
-    board[row][column] = marker
-
+    # board[@row][@column] = marker
+    unless (board[@row][@column] == @player1.character) || (board[@row][@column] == @player2.character)
+      board[@row][@column] = marker
+      @turn += 1
+    end
     # Printing out the board
     print_board
 
     return unless win_check(@player1, @player2)
 
-    puts 'Do you want to play again? Please enter a valid option. [Y/N]'
-    answer = gets.chomp
-    if answer == 'Y' || answer == 'y' || answer == 'yes'.downcase
-      Game.new(@player1, @player2)
-    elsif answer == 'N' || answer == 'n' || answer == 'no'.downcase
-      exit
-    end
+    restart
   end
 
-  # Function to get the player's play
-  def player_play
-    puts "\nPlease, select the position you want to play in: \n"
-    gets.chomp
+  def restart
+    loop do
+      puts "\nDo you want to play again? Please enter a valid option. [Y/N]"
+      answer = gets.chomp
+      case answer
+      when 'Y', 'y', 'yes'.downcase
+        Game.new(@player1, @player2)
+      when 'N', 'n', 'no'.downcase
+        exit
+      end
+    end
   end
 
   # Function to print out the board, updating it as well on each round
   def print_board
     system('clear')
-    puts "     #{board[0][0]} | #{board[0][1]} | #{board[0][2]}\n"
-    puts '    ---+---+---'
-    puts "     #{board[1][0]} | #{board[1][1]} | #{board[1][2]} \n"
-    puts '    ---+---+---'
-    puts "     #{board[2][0]} | #{board[2][1]} | #{board[2][2]} \n"
+    puts "           #{board[0][0]} | #{board[0][1]} | #{board[0][2]}      | \e[4mPlayer scores\e[0m\n"
+    puts '          ---+---+---     |'
+    puts "           #{board[1][0]} | #{board[1][1]} | #{board[1][2]}      | #{player1.character}: #{player1.score} => #{player1.name}\n"
+    puts "          ---+---+---     | #{player2.character}: #{player2.score} => #{player2.name}"
+    puts "           #{board[2][0]} | #{board[2][1]} | #{board[2][2]}      |\n"
   end
 
   def win_check(player1, player2)
@@ -161,7 +173,8 @@ class Board
              end
 
     winner.score += 1
-    puts "There's a winner! The winner is #{winner.name} and their score is #{winner.score}"
+    puts "\nThere's a winner! The winner is #{winner.name} and their score is #{winner.score}\n"
+    print_board
     @is_winner = true
   end
 
@@ -194,9 +207,3 @@ end
 
 # Starting the game
 Game.new('new', 'new')
-# start = Game.new
-# p start.game.round
-
-# TODO: players' can't put their marker on top of somebody elses (no overwriting)
-# TODO:
-# Idea: create a hash to store the player's name and their character, as a key value pair, for easier checking of who won
