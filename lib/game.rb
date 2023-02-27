@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Game
-  attr_reader :player1_name, :player2_name, :player1_char, :player2_char, :player1_score, :player2_score
+  attr_reader :player1, :player2
   attr_accessor :game
 
   def initialize(p1 = 'new', p2 = 'new')
