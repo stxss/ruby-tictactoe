@@ -60,7 +60,7 @@ class Board
       when 'Y', 'y', 'yes'.downcase
         Game.new(@player1, @player2)
       when 'N', 'n', 'no'.downcase
-        puts "Thanks for playing Tic-Tac-Toe! See you next time! :D"
+        puts 'Thanks for playing Tic-Tac-Toe! See you next time! :D'
         exit
       end
     end

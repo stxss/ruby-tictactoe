@@ -5,14 +5,28 @@ class Game
   attr_accessor :game
 
   def initialize(p1 = 'new', p2 = 'new')
-    if p1 == 'new' || p2 == 'new'
+    @p1 = p1
+    @p2 = p2
+    @player1 = nil
+    @player2 = nil
+    @game = nil
+  end
 
-      @player1 = Player.new('first')
-      @player2 = Player.new('second', @player1.name, @player1.character)
+  def play
+    player_setup
+    board_setup(@p1, @p2)
+  end
 
-      @game = Board.new(@player1, @player2)
-    else
-      @game = Board.new(p1, p2)
-    end
+  def player_setup
+    @player1 = Player.new('first')
+    @player2 = Player.new('second', @player1.name, @player1.character)
+  end
+
+  def board_setup(p1, p2)
+    @game = if p1 == 'new' || p2 == 'new'
+              Board.new(@player1, @player2)
+            else
+              Board.new(p1, p2)
+            end
   end
 end
