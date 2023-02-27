@@ -2,7 +2,7 @@
 
 class Player
   attr_reader :name, :character
-  attr_accessor :score, :first, :second
+  attr_accessor :score
 
   def initialize(order, player1_name = nil, player1_character = nil, name = nil, character = nil, score = 0)
     @order = order
