@@ -1,4 +1,6 @@
-require_relative "../lib/player"
+# frozen_string_literal: true
+
+require_relative '../lib/player'
 
 describe Player do
   let(:new_player) { Player.new('stass', 'x', 0) }
@@ -19,4 +21,4 @@ describe Player do
 end
 
 
-# TODO when a player wins a round, update the score.
+# TODO: when a player wins a round, update the score.
