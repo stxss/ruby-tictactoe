@@ -6,3 +6,4 @@ require_relative('board')
 
 game = Game.new
 game.play
+#added to cimmit

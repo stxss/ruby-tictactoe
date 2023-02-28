@@ -21,7 +21,7 @@ class Game
     @player1 = Player.new('first')
     @player2 = Player.new('second', @player1.name, @player1.character)
   end
-
+  #added to commit the file
   def board_setup(p1, p2)
     @game = if p1 == 'new' || p2 == 'new'
               Board.new(@player1, @player2)
