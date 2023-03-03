@@ -1,32 +1,27 @@
 # frozen_string_literal: true
-
-require_relative('../lib/game')
-require_relative('../lib/player')
+require_relative("../lib/player")
+require_relative("../lib/game")
 
 describe Game do
-  context 'when creating a new game' do
-    subject(:new_game) { described_class.new }
-
-    describe '#play' do
-      it 'creates two players, with different names and playing symbols and sets up the board' do
-        allow(new_game).to receive(:player_setup)
-        allow(new_game).to receive(:board_setup)
-        new_game.play
-      end
-    end
-
-    describe '#player_setup' do
-      let(:player1) { instance_double(Player) }
+  describe "#play" do
+    context "sets up game" do
+      subject(:game) { described_class.new() }
 
       before do
-        name1 = "stass"
-        allow(player1).to receive(:gets)
-        allow(player1).to receive(:create_player).and_return(name1)
+        allow(game).to receive(:player_setup).once
+        allow(game).to receive(:board_setup).once
       end
 
-      it 'creates player1' do
-        expect(player1).to receive(:create_player).with("first")
-        new_game.player_setup
+      it "sends player_setup" do
+        expect(game).to receive(:player_setup)
+        game.play
+      end
+
+      it "sends board_setup" do
+        p1 = game.instance_variable_get(:@p1)
+        p2 = game.instance_variable_get(:@p2)
+        expect(game).to receive(:board_setup).with(p1, p2)
+        game.play
       end
     end
   end

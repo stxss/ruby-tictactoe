@@ -6,13 +6,14 @@ class Board
 
   def initialize(player1, player2)
     @is_winner = false
-
     @player1 = player1
     @player2 = player2
-
     @board = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-
     @turn = 1
+    check_win
+  end
+
+  def check_win
     until @is_winner
       round(turn)
 
@@ -24,7 +25,7 @@ class Board
   end
 
   def round(turn)
-    play = turn.odd? ? 'first' : 'second'
+    play = turn.odd? ? "first" : "second"
 
     loop do
       puts "\nPlease, select the position you want to play in (1-9): \n"
@@ -35,11 +36,11 @@ class Board
     @row = placing / 3
     @column = placing % 3
 
-    @marker = if play == 'first'
-                @player1.character
-              else
-                @player2.character
-              end
+    @marker = if play == "first"
+      @player1.character
+    else
+      @player2.character
+    end
 
     unless (board[@row][@column] == @player1.character) || (board[@row][@column] == @player2.character)
       board[@row][@column] = marker
@@ -57,10 +58,11 @@ class Board
       puts "\nDo you want to play again? Please enter a valid option. [Y/N]"
       answer = gets.chomp
       case answer
-      when 'Y', 'y', 'yes'.downcase
-        Game.new(@player1, @player2)
-      when 'N', 'n', 'no'.downcase
-        puts 'Thanks for playing Tic-Tac-Toe! See you next time! :D'
+      when "Y", "y", "yes".downcase
+        g2 = Game.new(@player1, @player2)
+        g2.play
+      when "N", "n", "no".downcase
+        puts "Thanks for playing Tic-Tac-Toe! See you next time! :D"
         exit
       end
     end
@@ -68,12 +70,12 @@ class Board
 
   def print_board
     if RUBY_PLATFORM =~ /win32/ || RUBY_PLATFORM =~ /mingw/
-      system('cls')
+      system("cls")
     else
-      system('clear')
+      system("clear")
     end
     puts "           #{board[0][0]} | #{board[0][1]} | #{board[0][2]}      | \e[4mPlayer scores\e[0m\n"
-    puts '          ---+---+---     |'
+    puts "          ---+---+---     |"
     puts "           #{board[1][0]} | #{board[1][1]} | #{board[1][2]}      | #{player1.character}: #{player1.score} => #{player1.name}\n"
     puts "          ---+---+---     | #{player2.character}: #{player2.score} => #{player2.name}"
     puts "           #{board[2][0]} | #{board[2][1]} | #{board[2][2]}      |\n"
@@ -83,10 +85,10 @@ class Board
     return unless row_win? || col_win? || diag_win?
 
     winner = if marker == player1.character
-               player1
-             else
-               player2
-             end
+      player1
+    else
+      player2
+    end
 
     winner.score += 1
     puts "\nThere's a winner! The winner is #{winner.name} and their score is #{winner.score}\n"

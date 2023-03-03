@@ -1,10 +1,8 @@
-# frozen_string_literal: true
-
 class Game
   attr_reader :player1, :player2
   attr_accessor :game
 
-  def initialize(p1 = 'new', p2 = 'new')
+  def initialize(p1 = "new", p2 = "new")
     @p1 = p1
     @p2 = p2
     @player1 = nil
@@ -13,20 +11,24 @@ class Game
   end
 
   def play
-    player_setup
+    if @p1 == "new" && @p2 == "new"
+      player_setup
+    end
     board_setup(@p1, @p2)
   end
 
+  private
+
   def player_setup
-    @player1 = Player.new('first')
-    @player2 = Player.new('second', @player1.name, @player1.character)
+    @player1 = Player.new.create_player("first")
+    @player2 = Player.new(@player1.name, @player1.character).create_player("second")
   end
-  #added to commit the file
+
   def board_setup(p1, p2)
-    @game = if p1 == 'new' || p2 == 'new'
-              Board.new(@player1, @player2)
-            else
-              Board.new(p1, p2)
-            end
+    @game = if p1 == "new" || p2 == "new"
+      Board.new(@player1, @player2)
+    else
+      Board.new(p1, p2)
+    end
   end
 end
