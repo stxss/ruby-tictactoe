@@ -32,7 +32,7 @@ class Player
 
     case order
     when "second"
-      puts "It can't be '\e[1m#{@player1_char}\e[0m'!\n\n"
+      puts "It can't be '\e[1m#{@player1_character}\e[0m'!\n\n"
     end
 
     loop do
@@ -58,7 +58,7 @@ class Player
     when "first"
       input if input.length == 1 && input.match(/[a-zA-Z]/)
     when "second"
-      input if input.length == 1 && input.match(/[a-zA-Z]/) && input != @player1_char
+      input if input.length == 1 && input.match(/[a-zA-Z]/) && input != @player1_character
     end
   end
 end
