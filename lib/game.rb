@@ -20,15 +20,19 @@ class Game
   private
 
   def player_setup
-    @player1 = Player.new.create_player("first")
-    @player2 = Player.new(@player1.name, @player1.character).create_player("second")
+    @player1 = Player.new
+    @player1.create_player("first")
+
+    @player2 = Player.new(@player1.name, @player1.character)
+    @player2.create_player("second")
   end
 
   def board_setup(p1, p2)
-    @game = if p1 == "new" || p2 == "new"
-      Board.new(@player1, @player2)
-    else
-      Board.new(p1, p2)
-    end
+    @game = board = if p1 == "new" || p2 == "new"
+              Board.new(@player1, @player2)
+            else
+              Board.new(p1, p2)
+            end
+    board.game
   end
 end

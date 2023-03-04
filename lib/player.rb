@@ -4,7 +4,7 @@ class Player
 
   def initialize(player1_name = nil, player1_character = nil, name = nil, character = nil, score = 0)
     @player1_name = player1_name
-    @player1_char = player1_character
+    @player1_character = player1_character
     @name = name
     @character = character
     @score = score

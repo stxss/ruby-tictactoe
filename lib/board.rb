@@ -10,19 +10,44 @@ class Board
     @player2 = player2
     @board = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     @turn = 1
-    check_win
   end
 
-  def check_win
+  def game
     until @is_winner
       round(turn)
 
-      if turn == 10 && @is_winner == false
+      if @turn == 10 && @is_winner == false
         puts "Okay, no more places are available and there is no winner, so it's a tie!\n"
         restart
       end
     end
   end
+
+  def row_win?
+    (0..2).any? do |row|
+      board[row].all?(@marker)
+    end
+  end
+
+  def col_win?
+    (0..2).any? do |col|
+      board.transpose[col].all?(@marker)
+    end
+  end
+
+  def diag_win?
+    tlbr_diag = []
+    bltr_diag = []
+
+    3.times do |i|
+      tlbr_diag.push(board[i][i])
+      bltr_diag.push(board.reverse[i][i])
+    end
+
+    tlbr_diag.all?(@marker) || bltr_diag.all?(@marker)
+  end
+
+  private
 
   def round(turn)
     play = turn.odd? ? "first" : "second"
@@ -43,7 +68,7 @@ class Board
     end
 
     unless (board[@row][@column] == @player1.character) || (board[@row][@column] == @player2.character)
-      board[@row][@column] = marker
+      board[@row][@column] = @marker
       @turn += 1
     end
     print_board
@@ -51,6 +76,23 @@ class Board
     return unless win_check(@player1, @player2)
 
     restart
+  end
+
+  private
+
+  def win_check(player1, player2)
+    return unless row_win? || col_win? || diag_win?
+
+    winner = if @marker == player1.character
+      player1
+    else
+      player2
+    end
+
+    winner.score += 1
+    puts "\nThere's a winner! The winner is #{winner.name} and their score is #{winner.score}\n"
+    print_board
+    @is_winner = true
   end
 
   def restart
@@ -79,44 +121,5 @@ class Board
     puts "           #{board[1][0]} | #{board[1][1]} | #{board[1][2]}      | #{player1.character}: #{player1.score} => #{player1.name}\n"
     puts "          ---+---+---     | #{player2.character}: #{player2.score} => #{player2.name}"
     puts "           #{board[2][0]} | #{board[2][1]} | #{board[2][2]}      |\n"
-  end
-
-  def win_check(player1, player2)
-    return unless row_win? || col_win? || diag_win?
-
-    winner = if marker == player1.character
-      player1
-    else
-      player2
-    end
-
-    winner.score += 1
-    puts "\nThere's a winner! The winner is #{winner.name} and their score is #{winner.score}\n"
-    print_board
-    @is_winner = true
-  end
-
-  def row_win?
-    (0..2).any? do |row|
-      board[row].all?(marker)
-    end
-  end
-
-  def col_win?
-    (0..2).any? do |col|
-      board.transpose[col].all?(marker)
-    end
-  end
-
-  def diag_win?
-    tlbr_diag = []
-    bltr_diag = []
-
-    3.times do |i|
-      tlbr_diag.push(board[i][i])
-      bltr_diag.push(board.reverse[i][i])
-    end
-
-    tlbr_diag.all?(marker) || bltr_diag.all?(marker)
   end
 end
