@@ -1,5 +1,6 @@
 require_relative("../lib/player")
 
+
 describe Player do
   describe "#ask_name" do
     context "asks player for name" do
@@ -7,7 +8,7 @@ describe Player do
 
       before do
         order = "first"
-        valid_name = "ruby"
+        valid_name = "name"
         allow(player).to receive(:ask_name).with(order).and_return(valid_name)
       end
 
@@ -25,14 +26,14 @@ describe Player do
 
       before do
         order = "first"
-        valid_char = "ruby"
+        valid_char = "x"
         allow(player).to receive(:ask_char).with(order).and_return(valid_char)
       end
 
-      it "stops loop and does not display error message regarding character" do
+      it "then stops loop and does not display error message regarding character" do
         error_message = "You can't use another player's character!"
         expect(player).not_to receive(:puts).with(error_message)
-        player.create_player("first")
+        player.ask_char("first")
       end
     end
   end
