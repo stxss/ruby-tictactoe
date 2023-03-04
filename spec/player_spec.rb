@@ -1,6 +1,5 @@
 require_relative("../lib/player")
 
-
 describe Player do
   describe "#ask_name" do
     context "asks player for name" do
