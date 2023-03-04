@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+
 require_relative("../lib/player")
 require_relative("../lib/game")
 
 describe Game do
   describe "#play" do
     context "sets up game" do
-      subject(:game) { described_class.new() }
+      subject(:game) { described_class.new }
 
       before do
         allow(game).to receive(:player_setup).once
